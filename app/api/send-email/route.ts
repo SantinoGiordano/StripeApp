@@ -22,17 +22,28 @@ export async function POST(req: Request) {
       .map((item: any) => `${item.name} - $${item.price}`)
       .join("\n");
 
-    const mailOptions = {
+    const mailOptionsAdmin = {
       from: process.env.EMAIL_USER,
       to: "santinogiordano13@gmail.com",
       subject: `New Checkout from ${email}`,
       text: `Customer Email: ${email}\n\nCart Items:\n${cartDetails}`,
     };
 
-    console.log("Prepared email details:", mailOptions);
+    const mailOptionsCustomer = {
+      from: process.env.EMAIL_USER,
+      to: email, // send to customer
+      subject: "Your Meditation Shop Purchase",
+      text: `Thank you for your purchase!\n\nCart Items:\n${cartDetails}`,
+    };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email sent successfully:", info);
+    console.log("Prepared email details (admin):", mailOptionsAdmin);
+    console.log("Prepared email details (customer):", mailOptionsCustomer);
+
+    const infoAdmin = await transporter.sendMail(mailOptionsAdmin);
+    const infoCustomer = await transporter.sendMail(mailOptionsCustomer);
+
+    console.log("Email sent to admin:", infoAdmin);
+    console.log("Email sent to customer:", infoCustomer);
 
     return NextResponse.json({ success: true });
   } catch (error) {
