@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log('-------------------\n\n\n----------------------')
   if (req.method !== "POST") return res.status(405).end();
 
   const { cart, email } = req.body;
@@ -37,8 +38,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       customer: customer.id,
       auto_advance: false,
     });
+    console.dir(invoice, { depth: 100 });
 
-    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
+    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id!);
 
     res.status(200).json({ invoicePdf: finalizedInvoice.invoice_pdf });
   } catch (err: unknown) {
