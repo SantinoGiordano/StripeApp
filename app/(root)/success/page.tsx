@@ -1,48 +1,48 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useCartStore } from "@/store/cartStore";
+import { SuccessPageComponent } from "@/app/components/SuccessPage";
+import { Product } from "@/types/types";
+import Stripe from "stripe";
 
-export default function SuccessPage() {
-  const cart = useCartStore((state) => state.cart);
-  const clearCart = useCartStore((state) => state.clearCart);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2025-06-30.basil",
+});
 
-  const [, setEmail] = useState<string | null>(null);
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-
-    const storedEmail = localStorage.getItem("checkoutEmail");
-    setEmail(storedEmail);
-
-    console.log("Persisted email on success page:", storedEmail);
-    console.log("Persisted cart on success page:", cart);
-
-    if (storedEmail && cart.length > 0) {
-      fetch("/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: storedEmail, cart }),
-      }).then(() => {
-        clearCart();
-        localStorage.removeItem("checkoutEmail");
-      });
+// payment_intent
+// payment_intent_client_secret
+// redirect_status
+export default async function SuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined | null }>;
+}) {
+  const { payment_intent, payment_intent_client_secret, redirect_status } =
+    await searchParams;
+    
+  const intent = await stripe.paymentIntents.retrieve(
+    payment_intent as string,
+    {
+      client_secret: payment_intent_client_secret!,
+      expand: []
     }
-  }, [hydrated, cart, clearCart]);
+  );
+  // TODO: ensure payment suceeded (if status === succeeded)
+  const status = intent.status
+  const cart = JSON.parse(intent.metadata.cart || '[]') as Product[]
+  // TODO: send email to recipient
+  const email = intent.receipt_email
+  console.log({ status, cart, email})
+  // check if statuys is succeded
+  // read db for list of cart items by ObjecId
+  // calculate total proce by db item price entries
+  // get file name of each db cart item 
 
-return (
-  <div className="flex flex-col items-center justify-center h-screen text-center space-y-4 bg-blue-400 md:bg-gradient-to-r md:from-blue-400 md:to-purple-400">
-    <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
-      Payment Successful!
-    </h1>
-    <p className="text-lg text-white/90">
-      We&apos;ve sent your details to our team.
-    </p>
-  </div>
-);
+  // loop through the cart, get IDS
+  // map ids by file name
+  // RETRIEVE from BLOB STORAGE
+  // \https://vercel.com/docs/vercel-blob
+  // map items from blob into memopry
+  // build email with attachments
+  // send email to recipient
 
+  
+  return <SuccessPageComponent />;
 }
