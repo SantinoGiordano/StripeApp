@@ -11,8 +11,8 @@ export async function POST(request: NextRequest) {
     console.log("Creating payment intent with amount:", amount);
     console.log("Creating payment intent with amount:", cart);
 
-    // vLDATE CART OBJECT EXISTS
-    // TOD DO NOT TRUST AMOUNT FGROM FRONtENT 
+    // VALDATE CART OBJECT EXISTS
+    // TOD DO NOT TRUST AMOUNT FROM FRONtENT 
     // LOOP OVER CART ITEMS AND ADD THEM UP YOURSELF
     // MAKE DB REQUEST, LIST ALL ITEMS FROM DB -> GET PRICCES -> CALCULATE TOTAL
 
