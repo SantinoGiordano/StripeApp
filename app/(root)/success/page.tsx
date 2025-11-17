@@ -24,13 +24,12 @@ export default async function SuccessPage({
       expand: []
     }
   );
-  // TODO: ensure payment suceeded (if status === succeeded)
   const status = intent.status
   const cart = JSON.parse(intent.metadata.cart || '[]') as Product[]
   // TODO: send email to recipient
   const email = intent.receipt_email
   console.log({ status, cart, email})
-  // check if statuys is succeded
+  // check if status is succeeded
   // read db for list of cart items by ObjecId
   // calculate total proce by db item price entries
   // get file name of each db cart item 
@@ -43,6 +42,13 @@ export default async function SuccessPage({
   // build email with attachments
   // send email to recipient
 
-  
+  if (status === "succeeded" && email) {
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/send-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, cart }),
+    });
+  }
+
   return <SuccessPageComponent />;
 }
