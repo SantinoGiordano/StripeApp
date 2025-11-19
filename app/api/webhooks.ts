@@ -20,20 +20,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // 1. Create customer
     const customer = await stripe.customers.create({ email });
 
-    // 2. Add invoice items
     for (const item of cart) {
       await stripe.invoiceItems.create({
         customer: customer.id,
-        amount: Math.round(item.price * 100), // always round to avoid floating-point issues
+        amount: Math.round(item.price * 100),
         currency: "usd",
         description: item.name,
       });
     }
 
-    // 3. Create and finalize invoice
     const invoice = await stripe.invoices.create({
       customer: customer.id,
       auto_advance: false,
