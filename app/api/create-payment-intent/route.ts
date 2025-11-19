@@ -10,12 +10,7 @@ export async function POST(request: NextRequest) {
     const { amount, cart } = await request.json();
     console.log("Creating payment intent with amount:", amount);
     console.log("Creating payment intent with amount:", cart);
-
-    // VALDATE CART OBJECT EXISTS
-    // TOD DO NOT TRUST AMOUNT FROM FRONtENT 
-    // LOOP OVER CART ITEMS AND ADD THEM UP YOURSELF
-    // MAKE DB REQUEST, LIST ALL ITEMS FROM DB -> GET PRICCES -> CALCULATE TOTAL
-
+    
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "usd",
@@ -25,7 +20,7 @@ export async function POST(request: NextRequest) {
         cart,
       },
     });
-
+    
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
     console.error("Error creating payment intent:", error);
@@ -35,3 +30,9 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
+    // VALDATE CART OBJECT EXISTS
+    // TOD DO NOT TRUST AMOUNT FROM FRONtENT 
+    // LOOP OVER CART ITEMS AND ADD THEM UP YOURSELF
+    // MAKE DB REQUEST, LIST ALL ITEMS FROM DB -> GET PRICCES -> CALCULATE TOTAL
