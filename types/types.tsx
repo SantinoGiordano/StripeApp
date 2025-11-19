@@ -4,4 +4,5 @@ export type Product = {
   price: number;
   file: string;
   description: string;
+  blobUrl?:string;
 };
