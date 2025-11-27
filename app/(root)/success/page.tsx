@@ -33,7 +33,7 @@ export default async function SuccessPage({
     await fetch(`${process.env.NEXT_PUBLIC_URL}/api/send-email`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, cart }),
+      body: JSON.stringify({ email, cart }), // send email from here 
     });
   }
   
@@ -51,3 +51,4 @@ export default async function SuccessPage({
 // map items from blob into memopry
 // build email with attachments
 // send email to recipient
+// pull logic from the send-email to here 
