@@ -14,15 +14,38 @@ export async function POST(req: Request) {
 
     console.log("CART RECEIVED:", cart);
 
-    const purchasedDownloads = (cart as CartItem[])
-      .map((item) => {
-        const match = BLOB_PRODUCTS.find((p) => p.id === item._id);
-        return match
-          ? `${match.name}\nDownload: ${match.downloadUrl}\n`
-          : `NO MATCH FOUND for item._id="${item._id}"\n`;
-      })
-      .join("\n");
+    const attachments = [];
 
+    // Fetch each blob file and create attachment
+    for (const item of cart as CartItem[]) {
+      const match = BLOB_PRODUCTS.find((p) => p.id === item._id);
+
+      if (!match) {
+        console.error(`NO MATCH FOUND for item._id="${item._id}"`);
+        continue;
+      }
+
+      console.log("FETCHING MP3:", match.downloadUrl);
+
+      // Fetch the MP3 bytes from Vercel Blob
+      const response = await fetch(match.downloadUrl);
+
+      if (!response.ok) {
+        console.error("Failed to fetch blob:", match.downloadUrl);
+        continue;
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+
+      attachments.push({
+        filename: match.name + ".mp3",
+        content: buffer,
+        contentType: "audio/mpeg",
+      });
+    }
+
+    // Email transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -31,13 +54,13 @@ export async function POST(req: Request) {
       },
     });
 
+    // Send email with attachments
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Your Meditation Downloads",
-      text:
-        `Thank you for your purchase!\n\nHere are your downloads:\n\n` +
-        purchasedDownloads,
+      text: `Thank you for your purchase!\n\nYour audio files are attached to this email.\n`,
+      attachments,
     });
 
     return NextResponse.json({ success: true });
