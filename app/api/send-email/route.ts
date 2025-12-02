@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { BLOB_PRODUCTS } from "../.blob-product/blob-products";
+import { BLOB_PRODUCTS } from "../.blob-product/blobProducts";
 
 interface CartItem {
   _id: string;
