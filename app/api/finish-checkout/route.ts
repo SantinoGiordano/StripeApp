@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import nodemailer from "nodemailer";
-import { BLOB_PRODUCTS } from "../.blob-product/blobProducts";
+import { BLOB_PRODUCTS } from "../../../lib/.blob-product/blobProducts";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-06-30.basil",
