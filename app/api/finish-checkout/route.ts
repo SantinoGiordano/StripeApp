@@ -18,10 +18,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // Get the Stripe PaymentIntent
-    const intent = await stripe.paymentIntents.retrieve(payment_intent, {
-      expand: [],
-    });
+    // Retrieve payment intent
+    const intent = await stripe.paymentIntents.retrieve(payment_intent);
 
     const email = intent.receipt_email;
     const status = intent.status;
@@ -40,19 +38,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // Retrieve cart from metadata
-    const cart = JSON.parse(intent.metadata.cart || "[]");
+    // Retrieve IDs only (tiny metadata)
+    const cartIds = intent.metadata.cart_ids?.split(",") || [];
 
-    console.log("FINISH CHECKOUT CART:", cart);
+    console.log("FINISH CHECKOUT CART IDS:", cartIds);
 
-    const attachments = [];
+    const attachments: { filename: string; content: Buffer; contentType?: string }[] = [];
 
-    // Fetch & attach each blob MP3 file
-    for (const item of cart) {
-      const match = BLOB_PRODUCTS.find((p) => p.id === item._id);
+    // Find matching products by ID and attach files
+    for (const id of cartIds) {
+      const match = BLOB_PRODUCTS.find((p) => p.id === id);
 
       if (!match) {
-        console.error(`NO MATCH for item._id=${item._id}`);
+        console.error(`NO MATCH for id=${id}`);
         continue;
       }
 
@@ -74,7 +72,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // Email transporter setup
+    // Email transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -83,7 +81,7 @@ export async function POST(req: Request) {
       },
     });
 
-    // Send email with attachments
+    // Send email with all audio attachments
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
