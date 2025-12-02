@@ -59,7 +59,7 @@ const Nav = () => {
               href="/cart"
               className="hover:text-gray-400 transition-colors font-medium text-base md:text-lg "
             >
-              🛒 Your Cart
+              Your Cart
             </Link>
           </li>
         </ul>
@@ -114,7 +114,7 @@ const Nav = () => {
             className="block py-3 px-6 text-lg font-medium hover:text-gray-400 "
             onClick={() => setMobileOpen(false)}
           >
-            🛒 Your Cart
+            Your Cart
           </Link>
         </div>
       )}
