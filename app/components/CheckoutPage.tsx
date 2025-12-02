@@ -28,7 +28,10 @@ const CheckoutPage = ({
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ amount: convertToSubcurrency(totalPrice), cart: JSON.stringify(cart) }),
+      body: JSON.stringify({
+        amount: convertToSubcurrency(totalPrice),
+        cart, // 🔥 FIX — send raw cart, not stringified
+      }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
@@ -69,11 +72,12 @@ const CheckoutPage = ({
   }
 
   return (
-    <div className=" py-6 px-4 sm:px-6 md:px-8 w-full">
+    <div className="py-6 px-4 sm:px-6 md:px-8 w-full">
       <div className="max-w-sm sm:max-w-md md:max-w-lg mx-auto bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
         <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-900 text-center">
           Checkout
         </h2>
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-black mb-1">
@@ -107,5 +111,3 @@ const CheckoutPage = ({
 };
 
 export default CheckoutPage;
-
-
