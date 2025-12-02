@@ -7,21 +7,27 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, cart } = await request.json();
+    type CartItem = { _id: string };
+    const { amount, cart } = (await request.json()) as { amount: number; cart: CartItem[] };
+
     console.log("Creating payment intent with amount:", amount);
-    console.log("Creating payment intent with amount:", cart);
-    
+    console.log("Cart:", cart);
+
+    // Only send small metadata (IDs only)
+    const cartIds = cart.map((item: CartItem) => item._id).join(",");
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
-      
       metadata: {
-        cart,
+        cart_ids: cartIds, // 🔥 FIX: Tiny metadata
       },
     });
-    
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+    });
   } catch (error) {
     console.error("Error creating payment intent:", error);
     return NextResponse.json(
@@ -30,7 +36,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
 
     // VALDATE CART OBJECT EXISTS
     // TOD DO NOT TRUST AMOUNT FROM FRONtENT 
