@@ -75,7 +75,11 @@ const AudioCard = ({ id, title, description, price, file }: AudioCardProps) => {
 
   const toggleAudio = () => {
     if (!audioRef.current) return;
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
   };
 
   return (
