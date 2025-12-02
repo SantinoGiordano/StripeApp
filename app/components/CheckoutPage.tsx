@@ -32,7 +32,7 @@ const CheckoutPage = ({
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
-  }, [totalPrice]);
+  }, [cart, totalPrice]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
