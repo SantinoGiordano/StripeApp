@@ -30,7 +30,7 @@ const CheckoutPage = ({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         amount: convertToSubcurrency(totalPrice),
-        cart, // 🔥 FIX — send raw cart, not stringified
+        cart,
       }),
     })
       .then((res) => res.json())

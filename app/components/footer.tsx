@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 
@@ -7,7 +6,6 @@ const Footer = () => {
     <>
       <footer className="bg-blue-100 text-black pt-10">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-10 px-6 pb-10 border-b border-slate-600">
-          {/* Filler text section */}
           <div className="flex-1 bg-white bg-opacity-50 rounded-lg p-6 shadow-md border-l-4 border-purple-400">
             <h3 className="text-2xl font-bold mb-4 text-purple-800">
               About Us
@@ -30,7 +28,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Newsletter form section */}
           <div className="flex-1">
             <h3 className="text-2xl font-semibold tracking-wide mb-4 border-b border-purple-600 inline-block pb-1">
               Stay Updated

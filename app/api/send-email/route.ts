@@ -16,7 +16,6 @@ export async function POST(req: Request) {
 
     const attachments = [];
 
-    // Fetch each blob file and create attachment
     for (const item of cart as CartItem[]) {
       const match = BLOB_PRODUCTS.find((p) => p.id === item._id);
 
@@ -27,7 +26,7 @@ export async function POST(req: Request) {
 
       console.log("FETCHING MP3:", match.downloadUrl);
 
-      // Fetch the MP3 bytes from Vercel Blob
+
       const response = await fetch(match.downloadUrl);
 
       if (!response.ok) {
@@ -45,7 +44,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Email transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -54,7 +52,6 @@ export async function POST(req: Request) {
       },
     });
 
-    // Send email with attachments
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,

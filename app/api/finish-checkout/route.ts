@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
     const attachments: { filename: string; content: Buffer; contentType?: string }[] = [];
 
-    // Find matching products by ID and attach files
+ 
     for (const id of cartIds) {
       const match = BLOB_PRODUCTS.find((p) => p.id === id);
 
@@ -72,7 +72,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Email transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -80,8 +79,7 @@ export async function POST(req: Request) {
         pass: process.env.EMAIL_PASS,
       },
     });
-
-    // Send email with all audio attachments
+    
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
