@@ -86,7 +86,7 @@ const Footer = () => {
         <div className="text-center py-6 text-sm text-black">
           &copy; {new Date().getFullYear()} Meditation And Yoga. All rights
           reserved.
-          <div className="mt-1">&quot;Somewhere in Berkshire&quot;</div>
+          <div className="mt-1">&quot;165 Kemble Street, Lenox, MA 01240&quot;</div>
         </div>
       </footer>
     </>
