@@ -1,7 +1,15 @@
+'use client'
+
 import Image from "next/image";
 import { Brain, StretchHorizontal, HeartPulse } from "lucide-react";
+import { useEffect } from "react";
 
 export default function Home() {
+  
+    useEffect(() => {
+    alert(" This site is currently under construction.");
+  }, []);
+  
   return (
     <>
       <div
